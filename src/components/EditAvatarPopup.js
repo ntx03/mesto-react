@@ -1,13 +1,22 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useState } from "react"
 
-function EditAvararPopup({ isOpen, isClose }) {
+function EditAvararPopup({ isOpen, onClose }) {
+
+    const [avatar, setName] = useState('')
+
+    const onChangeAvatar = (e) => {
+        setName(e.target.value)
+    }
+
     return (
-        <PopupWithForm name='addAvatar' title="Обновить аватар" children={<><div className="popup__text-container">
-            <input id="link_to_the_avatar" type="url" required placeholder="ссылка на аватар" value=""
-                name="avatar" class="popup__text popup__text_input_picture" />
+        <PopupWithForm isOpen={isOpen} onClose={onClose} name='addAvatar' title="Обновить аватар"><div className="popup__text-container">
+            <input id="link_to_the_avatar" type="url" required placeholder="ссылка на аватар"
+                onChange={onChangeAvatar} value={avatar}
+                name="avatar" className="popup__text popup__text_input_picture" />
             <span id="link_to_the_avatar-error" className="popup__error-message"></span>
-        </div></>} isOpen={isOpen} isClose={isClose} />
+        </div>  </PopupWithForm>
     )
 }
 

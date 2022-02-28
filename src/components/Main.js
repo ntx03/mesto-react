@@ -23,7 +23,7 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, userName, userDescripti
             <section className="cards">
                 {Array.prototype.map.call(cards, function (item) {
                     return (
-                        <Card card={item} onEditPopupImage={onEditPopupImage} />
+                        <Card key={item._id} card={item} onEditPopupImage={onEditPopupImage} />
                     )
                 })}
             </section>

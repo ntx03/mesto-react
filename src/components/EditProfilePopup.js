@@ -1,18 +1,33 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useState } from "react"
 
-function EditProfilePopup({ isOpen, isClose }) {
+
+
+function EditProfilePopup({ isOpen, onClose }) {
+
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+
+    const onChangeName = (e) => {
+        setName(e.target.value)
+    }
+    const onChangeAboutMe = (e) => {
+        setDescription(e.target.value)
+    }
+
+
     return (
-        <PopupWithForm name='editProfile' title="Редактировать профиль" children={<><div className="popup__text-container">
-            <input id="name" type="text" required placeholder="Имя" minlength="2" maxlenght="40"
-                value="Жак-Ив Кусто" name="name" className="popup__text popup__text_input_name" />
+        <PopupWithForm name='editProfile' title="Редактировать профиль" isOpen={isOpen} onClose={onClose}>  <div className="popup__text-container">
+            <input id="name" type="text" required placeholder="Имя" onChange={onChangeName} minLength="2" maxlenght="40"
+                value={name} name="name" className="popup__text popup__text_input_name" />
             <span id="name-error" className="popup__error-message"></span>
         </div>
             <div className="popup__text-container">
-                <input id="about_me" type="text" placeholder="О себе" minlength="2" maxlenght="200" required
-                    value="Исследователь океана" name="aboutMe" className="popup__text popup__text_input_job " />
+                <input id="about_me" type="text" placeholder="О себе" onChange={onChangeAboutMe} minLength="2" maxlenght="200" required
+                    value={description} name="aboutMe" className="popup__text popup__text_input_job " />
                 <span id="about_me-error" className="popup__error-message"></span>
-            </div> </>} isOpen={isOpen} isClose={isClose} />
+            </div>   </PopupWithForm>
     );
 
 }

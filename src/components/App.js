@@ -1,4 +1,3 @@
-import '../index.css';
 import { useState, useEffect } from "react";
 import Header from '../components/Header';
 import Main from '../components/Main';
@@ -17,30 +16,28 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({ isOpen: false });
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState({});
-  console.log(selectedCard);
-  // получаем данные от сервера информацию о себе
+
+  // получаем данные от сервера информацию о себе и карточки
   useEffect(() => {
     api.getUserInfo()
       .then((data) => {
         setCurrentUser(data)
       })
       .catch(e => console.log(e))
-  }, [])
-  // получаем данные от сервера информацию с карточками
-  useEffect(() => {
     api.getInitialCards()
       .then((data) => {
         setCards(data)
       })
       .catch(err => console.log(err))
   }, [])
+
   // функция открытия попапа с аватаром
   const handleEditAvatarClick = () => {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
+    setIsEditAvatarPopupOpen(true)
   }
   // функция открытия попапа с профилем
   const handleEditProfileClick = () => {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen)
+    setIsEditProfilePopupOpen(true)
   }
   // функция открытия попапа с изображением
   const handleCardClick = ({ link, name, isOpen }) => {
@@ -48,7 +45,7 @@ function App() {
   }
   // функция открытия попапа с аватаром
   const handleAddPlaceClick = () => {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen)
+    setIsAddPlacePopupOpen(true)
   }
   // функция закрытия всех попапов
   const closeAllPopups = () => {
@@ -73,10 +70,10 @@ function App() {
         />
         <Footer />
       </div>
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} isClose={closeAllPopups} />
-      <AddPlasePopup isOpen={isAddPlacePopupOpen} isClose={closeAllPopups} />
-      <EditAvararPopup isOpen={isEditAvatarPopupOpen} isClose={closeAllPopups} />
-      <ImagePopup isClose={closeAllPopups} card={selectedCard} />
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+      <AddPlasePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+      <EditAvararPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+      <ImagePopup onClose={closeAllPopups} card={selectedCard} />
     </div>
   );
 }
