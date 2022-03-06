@@ -12,7 +12,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     useEffect(() => {
         setName(user.name);
         setDescription(user.about);
-    }, [user]);
+    }, [user, isOpen]);
 
 
     const [name, setName] = useState('')
@@ -40,13 +40,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
             isOpen={isOpen} onClose={onClose} handleSubmit={handleSubmit}>
             <div className="popup__text-container">
                 <input id="name" type="text" required placeholder="Имя"
-                    onChange={onChangeName} minLength="2" maxlenght="40"
+                    onChange={onChangeName} minLength="2" maxLenght="40"
                     value={name || ''} name="name" className="popup__text popup__text_input_name" />
                 <span id="name-error" className="popup__error-message"></span>
             </div>
             <div className="popup__text-container">
                 <input id="about_me" type="text" placeholder="О себе"
-                    onChange={onChangeAboutMe} minLength="2" maxlenght="200" required
+                    onChange={onChangeAboutMe} minLength="2" maxLenght="200" required
                     value={description || ''} name="aboutMe"
                     className="popup__text popup__text_input_job " />
                 <span id="about_me-error" className="popup__error-message"></span>
