@@ -2,7 +2,7 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 import { useState } from "react"
 
-function AddPlasePopup({ isOpen, onClose }) {
+function AddPlasePopup({ isOpen, onClose, onAddPlase }) {
 
     const [namePlace, setNamePlase] = useState('')
     const [link, setLink] = useState('')
@@ -14,8 +14,15 @@ function AddPlasePopup({ isOpen, onClose }) {
         setLink(e.target.value)
     }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        onAddPlase({
+            link: link,
+            name: namePlace,
+        });
+    }
     return (
-        <PopupWithForm name='addCard' title="Новое место" isOpen={isOpen} onClose={onClose}>  <div className="popup__text-container">
+        <PopupWithForm name='addCard' title="Новое место" isOpen={isOpen} onClose={onClose} handleSubmit={handleSubmit} >  <div className="popup__text-container">
             <input id="title" type="text" required placeholder="Название" minLength="2" maxlenght="30"
                 onChange={onChangePlase}
                 value={namePlace} name="title" className="popup__text popup__text_input_title" />

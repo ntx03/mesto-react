@@ -7,7 +7,7 @@ import AddPlasePopup from './AddPlacePopup';
 import EditAvararPopup from './EditAvatarPopup';
 import api from "../utils/api";
 import ImagePopup from './ImagePopup';
-
+import CurrentUserContext from '../contexts/currentUserContext';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -30,6 +30,56 @@ function App() {
       })
       .catch(err => console.log(err))
   }, [])
+
+  // функция установки лайков
+  function handleCardLike(card) {
+
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  // удаление карточки
+  const handleCardDelete = (card) => {
+    api.removeCard(card._id)
+      .then(() => {
+        setCards(state => state.filter(c => c._id !== card._id))
+      })
+      .catch(err => console.log(err));
+  }
+  //добавление карточки
+  const handleAddPlace = (data) => {
+    api.patchCard(data)
+      .then(newCard => {
+        setCards([newCard, ...cards])
+        closeAllPopups()
+      })
+      .catch(err => console.log(err));
+  }
+
+  // обработчик информации о пользователе
+  const handleUpdateUser = (userData) => {
+    api.patchProfileInfo(userData)
+      .then((data) => {
+        setCurrentUser(data)
+        closeAllPopups()
+      })
+      .catch(err => console.log(err));
+  }
+
+  // обработчик информации об аватаре
+  const handleUpdateAvatar = (avatar) => {
+    api.newAvatar(avatar)
+      .then((data) => {
+        setCurrentUser(data)
+        closeAllPopups()
+      })
+      .catch(err => console.log(err));
+  }
 
   // функция открытия попапа с аватаром
   const handleEditAvatarClick = () => {
@@ -55,26 +105,26 @@ function App() {
     setSelectedCard({ isOpen: false })
   }
   return (
-    <div className="app">
-      <div className="page">
-        <Header />
-        <Main onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          userAvatar={currentUser}
-          userName={currentUser.name}
-          userDescription={currentUser.about}
-          userAvatar={currentUser.avatar}
-          cards={cards}
-          onEditPopupImage={handleCardClick}
-        />
-        <Footer />
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="app">
+        <div className="page">
+          <Header />
+          <Main onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardDelete={handleCardDelete}
+            onCardLike={handleCardLike}
+            cards={cards}
+            onEditPopupImage={handleCardClick}
+          />
+          <Footer />
+        </div>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+        <AddPlasePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlase={handleAddPlace} />
+        <EditAvararPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+        <ImagePopup onClose={closeAllPopups} card={selectedCard} />
       </div>
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
-      <AddPlasePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
-      <EditAvararPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
-      <ImagePopup onClose={closeAllPopups} card={selectedCard} />
-    </div>
+    </CurrentUserContext.Provider>
   );
 }
 
